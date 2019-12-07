@@ -16,7 +16,9 @@
         "intrins.h": "c",
         "uart.c": "cpp",
         "xtr1common": "cpp",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "watchdog.c": "cpp",
+        "REG52.H": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.clang_format_fallbackStyle": "Webkit"

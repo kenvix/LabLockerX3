@@ -13,11 +13,13 @@
 // } DataFrame;
 void (* _UART_InterruptHandler)(byte type, UARTLength length, byte* payload) = 0;
 
+#if UART_USE_DATAFRAMED_RECEIVER != 0
 UARTLength _UART_State = 0;
 byte _UART_ReceivedType = 0;
 UARTLength _UART_ReceivedLength = 0;
 char* _UART_ReceivedPayload = 0;
 unsigned int _UART_TimerCount = 0;
+#endif
 
 #define FOSC 11059200L
 #define T1MS (65536-FOSC/12/1000)   //1ms timer calculation method in 12T mode
@@ -26,16 +28,19 @@ unsigned int _UART_TimerCount = 0;
 //1毫秒@11.0592MHz
 void Timer1Init(void)
 {
+#if UART_USE_DATAFRAMED_RECEIVER != 0
     RCAP2L = TL2 = T1MS;            //initial timer2 low byte
     RCAP2H = TH2 = T1MS >> 8;       //initial timer2 high byte
     TR2 = 1;                        //timer2 start running
     ET2 = 1;                        //enable timer2 interrupt
     EA = 1;                         //open global interrupt switch
     _UART_TimerCount = 100;                      //initial counter
+#endif
 }
 
 void UART_TimeoutTimer() interrupt 5
 {
+#if UART_USE_DATAFRAMED_RECEIVER != 0
     TF2 = 0;
     
     if (_UART_TimerCount > 0) {
@@ -49,6 +54,7 @@ void UART_TimeoutTimer() interrupt 5
             _UART_State = 0;
         }
     }
+#endif
 }
 
 /**
@@ -119,10 +125,12 @@ void UART_SendPingResponse() {
 }
 
 void UART_FreePayloadBuffer() {
+#if UART_USE_DATAFRAMED_RECEIVER != 0
     if (_UART_ReceivedPayload != 0) {
         free(_UART_ReceivedPayload);
         _UART_ReceivedPayload = 0;
     }
+#endif
 }
 
 /**
@@ -142,11 +150,10 @@ void UART_Interrupt() interrupt 4
     
     //当硬件接收到一个数据时，RI会置位
     if (RI == 1) {
-        
         RI = 0;
 
 #if UART_USE_DATAFRAMED_RECEIVER == 0
-        _UART_InterruptHandler(_UART_ReceivedType, 0, 0);
+        _UART_InterruptHandler(SBUF, 0, 0);
 #else
         switch (_UART_State) {
             case 0:
@@ -188,13 +195,14 @@ void UART_Interrupt() interrupt 4
                 }
                 break;
         }
-
+#endif       
+#if UART_USE_DATAFRAMED_RECEIVER != 0
         if (_UART_State >= 3 && _UART_State - 3 == _UART_ReceivedLength) {
             _UART_InterruptHandler(_UART_ReceivedType, _UART_State - 3, _UART_ReceivedPayload);
             _UART_State = 0;
         }
-    }
 #endif
+    }
     EA = 1;
 }
 #endif

@@ -25,11 +25,15 @@ void UART_HandleInterrupt(byte type, UARTLength length, char* payload);
 /**
  * 主函数
  */
-int main()
+void main()
 {
     UART_Init(UART_HandleInterrupt);
     enableCardReader();
     HEART_TEST = 0;
+
+    WatchDog_Init(WATCHDOG_OVERFLOW_SCALE);
+    WatchDog_Enable();
+
     while (1) {
         LED_OK = 1;
         LED_WAIT = 1;
@@ -37,9 +41,8 @@ int main()
 
         detectCard();
         sendHeartBeat();
+        WatchDog_Feed();
     }
-
-    return 0;
 }
 
 /**
@@ -115,7 +118,7 @@ void UART_HandleInterrupt(byte type, UARTLength length, byte* payload)
 
         case DATAFRAME_TYPE_DOOR_UNLOCK:
             unlock();
-            delay_10ms(500);
+            delay_10ms(DOOR_RELOCK_DELAY_10MS);
             lock();
             return;
 
@@ -174,7 +177,7 @@ void sendHeartBeat()
         beep(100);
     }
     if (heart >= 100) {
-        //UART_SendPingRequest();
+        UART_SendPingRequestOld();
         status = 3;
     }
     heart++;

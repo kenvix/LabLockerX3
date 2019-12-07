@@ -2,6 +2,7 @@
 #include "kenvix/UART.h"
 
 #define MOTOR_ROLLTATE_TIME_10MS 80
+#define DOOR_RELOCK_DELAY_10MS 500
 #define ENABLE_CARD_READER 0
 #define ENABLE_BEEP 0
 
