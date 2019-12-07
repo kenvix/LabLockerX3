@@ -1,0 +1,10 @@
+*.exe
+MAIN
+*.hex
+*.LST
+*.M51
+*.OBJ
+build
+src
+/build/README.md
+/README.md
