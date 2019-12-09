@@ -18,7 +18,8 @@
         "xtr1common": "cpp",
         "cstddef": "cpp",
         "watchdog.c": "cpp",
-        "REG52.H": "cpp"
+        "REG52.H": "cpp",
+        "INTRINS.H": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.clang_format_fallbackStyle": "Webkit"

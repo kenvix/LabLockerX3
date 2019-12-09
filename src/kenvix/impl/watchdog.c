@@ -35,7 +35,7 @@ void WatchDog_QuitIdleState()
 
 void EXT1IRQ(void) interrupt 2
 {
-    WDTFeed(); //喂狗
+    WatchDog_Feed(); //喂狗
 }
 
 #endif

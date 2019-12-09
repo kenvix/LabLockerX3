@@ -635,10 +635,8 @@ char PcdBakValue(unsigned char sourceaddr, unsigned char goaladdr)
     return status;
 }
 
-///////////////////////////////////////////////////////////////////////
-// Delay 10ms
-///////////////////////////////////////////////////////////////////////
-void delay_10ms(unsigned int _10ms)
+
+void Delay_10ms(unsigned int _10ms)
 {
 #ifndef NO_TIMER2
     RCAP2LH = RCAP2_10ms;
@@ -654,35 +652,6 @@ void delay_10ms(unsigned int _10ms)
 #else
     while (_10ms--) {
         delay_50us(19);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(20);
-        if (CmdValid)
-            return;
-        delay_50us(19);
-        if (CmdValid)
-            return;
     }
 #endif
 }

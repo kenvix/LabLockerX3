@@ -6,6 +6,7 @@
 #include <string.h>
 #include "kenvix/UART.h"
 #include "kenvix/watchdog.h"
+#include "kenvix/delay.h"
 
 typedef unsigned int uint;
 unsigned char idata ID[4];
