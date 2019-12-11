@@ -30,10 +30,12 @@ void main()
 {
     UART_Init(UART_HandleInterrupt);
     enableCardReader();
+
     HEART_TEST = 0;
 
     WatchDog_Init(WATCHDOG_OVERFLOW_SCALE);
     WatchDog_Enable();
+    UART_SendByte(0xFA);
 
     while (1) {
         LED_OK = 1;
@@ -114,7 +116,7 @@ void UART_HandleInterrupt(byte type, UARTLength length, byte* payload)
             return;
 
         case DATAFRAME_TYPE_ECHO:
-            UART_SendDataFrame(DATAFRAME_TYPE_ECHO, length, payload);
+            UART_SendDataFrame(DATAFRAME_TYPE_ECHO, length, payload); 
             return;
 
         case DATAFRAME_TYPE_DOOR_UNLOCK:
@@ -123,9 +125,20 @@ void UART_HandleInterrupt(byte type, UARTLength length, byte* payload)
             lock();
             return;
 
+        case DATAFRAME_TYPE_DOOR_FORCE_LOCK:
+            lock();
+            return;
+
+        case DATAFRAME_TYPE_DOOR_FORCE_UNLOCK:
+            unlock();
+            return;
+
         case DATAFRAME_TYPE_BEEP:
             beep(100);
             return;
+
+        case DATAFRAME_TYPE_RESTART:
+            return;    
         
         default:
             return;
